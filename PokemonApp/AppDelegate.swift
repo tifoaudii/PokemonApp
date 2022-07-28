@@ -14,7 +14,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow()
-        window?.rootViewController = ViewController()
+        
+        let service = URLSessionNetworkService()
+        let interactor = PokemonCardListInteractorAdapter(service: service)
+        let viewController = PokemonCardListViewController(interactor: interactor)
+        window?.rootViewController = UINavigationController(rootViewController: viewController)
         window?.makeKeyAndVisible()
         return true
     }
