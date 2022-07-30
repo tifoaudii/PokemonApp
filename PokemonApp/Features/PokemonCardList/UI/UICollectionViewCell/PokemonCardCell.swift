@@ -7,7 +7,6 @@
 
 import UIKit
 import Kingfisher
-import SkeletonView
 
 final class PokemonCardCell: UICollectionViewCell {
     
@@ -27,6 +26,7 @@ final class PokemonCardCell: UICollectionViewCell {
     
     private func configureView() {
         pokemonImageView.translatesAutoresizingMaskIntoConstraints = false
+        pokemonImageView.backgroundColor = .lightGray.withAlphaComponent(0.4)
         contentView.addSubview(pokemonImageView)
         NSLayoutConstraint.activate([
             pokemonImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),

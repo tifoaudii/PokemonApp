@@ -25,10 +25,15 @@ final class PokemonCardListViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         layout.scrollDirection = .vertical
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
+    let footerLoadingView: FooterLoadingView = FooterLoadingView()
+    
     private var data: [PokemonData] = []
+    private var footerHeightConstraint: NSLayoutConstraint?
+    private var collectionViewBottomConstraint: NSLayoutConstraint?
     
     private let interactor: PokemonCardListInteractor
     
@@ -61,6 +66,23 @@ final class PokemonCardListViewController: UIViewController {
         }
     }
     
+    func loadMorePokemons() {
+        interactor.loadMorePokemons { [weak self] result in
+            switch result {
+            case .success(let newData):
+                self?.data.append(contentsOf: newData)
+                self?.collectionView.reloadData()
+                self?.footerHeightConstraint?.constant = 0
+                self?.collectionViewBottomConstraint?.constant = 0
+                self?.footerLoadingView.stopAnimating()
+            case .failure(_):
+                self?.footerHeightConstraint?.constant = 0
+                self?.collectionViewBottomConstraint?.constant = 0
+                self?.footerLoadingView.stopAnimating()
+            }
+        }
+    }
+    
     func registerStateObserver() {
         interactor.registerStateObserver { [weak self] _ in
             self?.collectionView.reloadData()
@@ -68,23 +90,37 @@ final class PokemonCardListViewController: UIViewController {
     }
     
     private func configureRootView() {
+        navigationController?.navigationBar.isTranslucent = false
         navigationItem.titleView = searchBar
+        
         let searchTextField = searchBar.value(forKey: "searchField") as? UITextField
         searchTextField?.textColor = .white
         
         view.backgroundColor = .black
         view.addSubview(collectionView)
+        view.addSubview(footerLoadingView)
+        
+        footerHeightConstraint = footerLoadingView.heightAnchor.constraint(equalToConstant: 0)
+        collectionViewBottomConstraint = collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        
+        footerHeightConstraint?.isActive = true
+        collectionViewBottomConstraint?.isActive = true
+        
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            
+            footerLoadingView.topAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            footerLoadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            footerLoadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
     
     private func configureCollectionView() {
         collectionView.register(PokemonCardCell.self, forCellWithReuseIdentifier: PokemonCardCell.identifier)
         collectionView.register(PokemonSkeletonCell.self, forCellWithReuseIdentifier: PokemonSkeletonCell.identifier)
+        collectionView.register(PokemonCardErrorCell.self, forCellWithReuseIdentifier: PokemonCardErrorCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -93,30 +129,50 @@ final class PokemonCardListViewController: UIViewController {
 extension PokemonCardListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if interactor.state == .loading {
+        switch interactor.state {
+        case .loading:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonSkeletonCell.identifier, for: indexPath) as? PokemonSkeletonCell else {
                 return PokemonSkeletonCell()
             }
             cell.startShimmering()
             return cell
+        case .error:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCardErrorCell.identifier, for: indexPath) as? PokemonCardErrorCell else {
+                return PokemonCardErrorCell()
+            }
+            
+            cell.didSelectReloadButton = { [weak self] in
+                self?.fetchPokemons()
+            }
+            
+            return cell
+        case .populated:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCardCell.identifier, for: indexPath) as? PokemonCardCell else {
+                return PokemonCardCell()
+            }
+            
+            cell.bindView(with: data[indexPath.row])
+            return cell
+        default:
+            return UICollectionViewCell()
         }
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCardCell.identifier, for: indexPath) as? PokemonCardCell else {
-            return PokemonCardCell()
-        }
-        
-        cell.bindView(with: data[indexPath.row])
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        interactor.state == .populated ? data.count : 10
+        switch interactor.state {
+        case .error, .initial:
+            return 1
+        case .loading:
+            return 10
+        case .populated:
+            return data.count
+        }
     }
 }
 
 extension PokemonCardListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: view.frame.width / 2, height: view.frame.height / 2)
+        return interactor.state == .error ? .init(width: view.frame.width, height: view.frame.height) : .init(width: view.frame.width / 2, height: view.frame.height / 2.3)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -125,5 +181,16 @@ extension PokemonCardListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         0
+    }
+}
+
+extension PokemonCardListViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > scrollView.contentSize.height - (scrollView.contentInset.bottom + scrollView.bounds.height) {
+            footerHeightConstraint?.constant = 44
+            collectionViewBottomConstraint?.constant = -44
+            footerLoadingView.startAnimating()
+            loadMorePokemons()
+        }
     }
 }

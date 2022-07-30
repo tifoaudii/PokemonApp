@@ -19,6 +19,7 @@ protocol PokemonCardListInteractor {
     
     func registerStateObserver(_ action: @escaping (PokemonCardListState) -> Void)
     func fetchPokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void)
+    func loadMorePokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void)
 }
 
 final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
@@ -30,6 +31,8 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
     }
     
     private var didChangeState: ((PokemonCardListState) -> Void)?
+    private var page: Int = 1
+    private var isLoadMorePokemons = false
     
     var state: PokemonCardListState = .initial {
         didSet {
@@ -44,7 +47,7 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
     func fetchPokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void) {
         state = .loading
         
-        let usecase = GetPokemonUseCase()
+        let usecase = GetPokemonUseCase(page: 1, pageSize: 20)
         service.request(usecase) { [weak self] result in
             switch result {
             case .success(let response):
@@ -58,6 +61,29 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
                     completion(.failure(error))
                 }
             }
+        }
+    }
+    
+    func loadMorePokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void) {
+        guard !isLoadMorePokemons else { return }
+        
+        isLoadMorePokemons = true
+        page += 1
+        
+        let usecase = GetPokemonUseCase(page: page, pageSize: 20)
+        service.request(usecase) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    completion(.success(response.data))
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+            
+            self?.isLoadMorePokemons = false
         }
     }
 }

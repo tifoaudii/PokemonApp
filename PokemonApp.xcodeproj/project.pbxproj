@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		833C438B28937DCE00E9ABC4 /* PokemonCardErrorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833C438A28937DCE00E9ABC4 /* PokemonCardErrorCell.swift */; };
+		8363C4C52893C6E70034951A /* FooterLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8363C4C42893C6E70034951A /* FooterLoadingView.swift */; };
 		83AD2F112892DA470026240A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 83AD2F102892DA470026240A /* Kingfisher */; };
 		83AD2F142892DBD00026240A /* PokemonResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83AD2F132892DBD00026240A /* PokemonResponse.swift */; };
 		83AD2F1B2892DC400026240A /* GetPokemonUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83AD2F1A2892DC400026240A /* GetPokemonUseCase.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		833C438A28937DCE00E9ABC4 /* PokemonCardErrorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonCardErrorCell.swift; sourceTree = "<group>"; };
+		8363C4C42893C6E70034951A /* FooterLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterLoadingView.swift; sourceTree = "<group>"; };
 		83AD2F132892DBD00026240A /* PokemonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonResponse.swift; sourceTree = "<group>"; };
 		83AD2F1A2892DC400026240A /* GetPokemonUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPokemonUseCase.swift; sourceTree = "<group>"; };
 		83AD2F1D2892DC600026240A /* PokemonCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonCardCell.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 			children = (
 				83AD2F1D2892DC600026240A /* PokemonCardCell.swift */,
 				83AD2F262892E1A10026240A /* PokemonSkeletonCell.swift */,
+				833C438A28937DCE00E9ABC4 /* PokemonCardErrorCell.swift */,
 			);
 			path = UICollectionViewCell;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				83AD2F2A2892E7150026240A /* UIView+Shimmer.swift */,
+				8363C4C42893C6E70034951A /* FooterLoadingView.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -381,9 +387,11 @@
 			files = (
 				83AD2F2B2892E7150026240A /* UIView+Shimmer.swift in Sources */,
 				83AD2F272892E1A10026240A /* PokemonSkeletonCell.swift in Sources */,
+				8363C4C52893C6E70034951A /* FooterLoadingView.swift in Sources */,
 				83BF5092289244F400140A89 /* UseCase.swift in Sources */,
 				83BF5064289231E400140A89 /* PokemonCardListViewController.swift in Sources */,
 				83AD2F1B2892DC400026240A /* GetPokemonUseCase.swift in Sources */,
+				833C438B28937DCE00E9ABC4 /* PokemonCardErrorCell.swift in Sources */,
 				83BF50942892459300140A89 /* NetworkService.swift in Sources */,
 				83AD2F252892DFDA0026240A /* PokemonCardListInteractor.swift in Sources */,
 				83AD2F1E2892DC600026240A /* PokemonCardCell.swift in Sources */,

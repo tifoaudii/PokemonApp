@@ -9,6 +9,14 @@ import Foundation
 
 struct GetPokemonUseCase: UseCase {
     
+    private let page: Int
+    private let pageSize: Int
+    
+    init(page: Int, pageSize: Int) {
+        self.page = page
+        self.pageSize = pageSize
+    }
+    
     var url: String {
         "https://api.pokemontcg.io/v2/cards"
     }
@@ -19,8 +27,8 @@ struct GetPokemonUseCase: UseCase {
     
     var queryItems: [String : String] {
         [
-            "page": "1",
-            "pageSize": "20"
+            "page": "\(page)",
+            "pageSize": "\(pageSize)"
         ]
     }
     
