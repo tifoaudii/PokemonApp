@@ -12,11 +12,13 @@ struct GetPokemonUseCase: UseCase {
     private let page: Int
     private let pageSize: Int
     private let type: String?
+    private let query: String?
     
-    init(page: Int, pageSize: Int, type: String? = nil) {
+    init(page: Int, pageSize: Int, type: String? = nil, query: String? = nil) {
         self.page = page
         self.pageSize = pageSize
         self.type = type
+        self.query = query
     }
     
     var url: String {
@@ -35,6 +37,10 @@ struct GetPokemonUseCase: UseCase {
         
         if let type = type {
             baseQuery["q"] = "types:\(type)"
+        }
+        
+        if let query = query {
+            baseQuery["q"] = "name:\(query)"
         }
         
         return baseQuery

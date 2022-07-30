@@ -16,7 +16,9 @@ final class PokemonCardListViewController: UIViewController {
         searchBar.searchBarStyle = .minimal
         searchBar.backgroundColor = .black
         searchBar.tintColor = .white
+        searchBar.showsCancelButton = true
         searchBar.placeholder = "search pokemon cards"
+        searchBar.enablesReturnKeyAutomatically = false
         return searchBar
     }()
     
@@ -59,7 +61,6 @@ final class PokemonCardListViewController: UIViewController {
             switch result {
             case .success(let data):
                 self?.data = data
-                self?.collectionView.reloadData()
             case .failure(let error):
                 print(error)
             }
@@ -89,12 +90,24 @@ final class PokemonCardListViewController: UIViewController {
         }
     }
     
+    func searchPokemons(withQuery query: String) {
+        interactor.searchPokemons(withQuery: query) { [weak self] result in
+            switch result {
+            case .success(let data):
+                self?.data = data
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     private func configureRootView() {
         navigationController?.navigationBar.isTranslucent = false
         navigationItem.titleView = searchBar
         
         let searchTextField = searchBar.value(forKey: "searchField") as? UITextField
         searchTextField?.textColor = .white
+        searchBar.delegate = self
         
         view.backgroundColor = .black
         view.addSubview(collectionView)
@@ -121,6 +134,7 @@ final class PokemonCardListViewController: UIViewController {
         collectionView.register(PokemonCardCell.self, forCellWithReuseIdentifier: PokemonCardCell.identifier)
         collectionView.register(PokemonSkeletonCell.self, forCellWithReuseIdentifier: PokemonSkeletonCell.identifier)
         collectionView.register(PokemonCardErrorCell.self, forCellWithReuseIdentifier: PokemonCardErrorCell.identifier)
+        collectionView.register(PokemonEmptyCell.self, forCellWithReuseIdentifier: PokemonEmptyCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -146,6 +160,12 @@ extension PokemonCardListViewController: UICollectionViewDataSource {
             }
             
             return cell
+        case .empty:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonEmptyCell.identifier, for: indexPath) as? PokemonEmptyCell else {
+                return PokemonEmptyCell()
+            }
+            
+            return cell
         case .populated:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCardCell.identifier, for: indexPath) as? PokemonCardCell else {
                 return PokemonCardCell()
@@ -160,7 +180,7 @@ extension PokemonCardListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch interactor.state {
-        case .error, .initial:
+        case .error, .initial, .empty:
             return 1
         case .loading:
             return 10
@@ -172,7 +192,11 @@ extension PokemonCardListViewController: UICollectionViewDataSource {
 
 extension PokemonCardListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return interactor.state == .error ? .init(width: view.frame.width, height: view.frame.height) : .init(width: view.frame.width / 2, height: view.frame.height / 2.3)
+        if interactor.state == .error || interactor.state == .empty {
+            return .init(width: view.frame.width, height: view.frame.height)
+        }
+        
+        return .init(width: view.frame.width / 2, height: view.frame.height / 2.3)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -199,5 +223,18 @@ extension PokemonCardListViewController {
             footerLoadingView.startAnimating()
             loadMorePokemons()
         }
+    }
+}
+
+extension PokemonCardListViewController: UISearchBarDelegate {
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let query = searchBar.text else { return }
+        searchBar.endEditing(true)
+        searchPokemons(withQuery: query)
     }
 }

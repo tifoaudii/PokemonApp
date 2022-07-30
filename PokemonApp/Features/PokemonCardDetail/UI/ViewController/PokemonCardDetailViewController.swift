@@ -127,7 +127,7 @@ extension PokemonCardDetailViewController: UICollectionViewDataSource {
         switch interactor.state {
         case .populated:
             return data.count
-        case .error, .initial:
+        case .error, .initial, .empty:
             return 1
         case .loading:
             return 10

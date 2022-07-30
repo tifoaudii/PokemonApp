@@ -9,6 +9,7 @@ import Foundation
 
 enum PokemonCardListState {
     case initial
+    case empty
     case loading
     case error
     case populated
@@ -20,6 +21,7 @@ protocol PokemonCardListInteractor {
     func registerStateObserver(_ action: @escaping (PokemonCardListState) -> Void)
     func fetchPokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void)
     func loadMorePokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void)
+    func searchPokemons(withQuery query: String, completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void)
 }
 
 final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
@@ -31,6 +33,8 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
     }
     
     private var didChangeState: ((PokemonCardListState) -> Void)?
+    private var searchQuery: String?
+    
     private var page: Int = 1
     private var isLoadMorePokemons = false
     
@@ -66,13 +70,36 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
         }
     }
     
+    func searchPokemons(withQuery query: String, completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void) {
+        searchQuery = query.isEmpty ? nil : query
+        state = .loading
+        
+        let usecase = GetPokemonUseCase(page: 1, pageSize: 20, query: searchQuery)
+        service.request(usecase) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.state = response.data.isEmpty ? .empty : .populated
+                    completion(.success(self.makePokemonCardViewModels(response.data)))
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.state = .error
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
     func loadMorePokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void) {
         guard !isLoadMorePokemons else { return }
         
         isLoadMorePokemons = true
         page += 1
         
-        let usecase = GetPokemonUseCase(page: page, pageSize: 20)
+        let usecase = GetPokemonUseCase(page: page, pageSize: 20, query: searchQuery)
         service.request(usecase) { [weak self] result in
             guard let self = self else { return }
             

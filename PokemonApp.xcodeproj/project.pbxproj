@@ -31,6 +31,7 @@
 		83FD895B2895060400385256 /* PokemonCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD895A2895060400385256 /* PokemonCardViewModel.swift */; };
 		83FD895E28950F5F00385256 /* PokemonCardDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD895D28950F5F00385256 /* PokemonCardDetailViewModel.swift */; };
 		83FD89602895161900385256 /* PokemonImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD895F2895161900385256 /* PokemonImageViewController.swift */; };
+		83FD89622895687900385256 /* PokemonEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD89612895687900385256 /* PokemonEmptyCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		83FD895A2895060400385256 /* PokemonCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonCardViewModel.swift; sourceTree = "<group>"; };
 		83FD895D28950F5F00385256 /* PokemonCardDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonCardDetailViewModel.swift; sourceTree = "<group>"; };
 		83FD895F2895161900385256 /* PokemonImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonImageViewController.swift; sourceTree = "<group>"; };
+		83FD89612895687900385256 /* PokemonEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonEmptyCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +185,7 @@
 				83AD2F1D2892DC600026240A /* PokemonCardCell.swift */,
 				83AD2F262892E1A10026240A /* PokemonSkeletonCell.swift */,
 				833C438A28937DCE00E9ABC4 /* PokemonCardErrorCell.swift */,
+				83FD89612895687900385256 /* PokemonEmptyCell.swift */,
 			);
 			path = UICollectionViewCell;
 			sourceTree = "<group>";
@@ -483,6 +486,7 @@
 				83AD2F1E2892DC600026240A /* PokemonCardCell.swift in Sources */,
 				83AD2F142892DBD00026240A /* PokemonResponse.swift in Sources */,
 				8327E6522894EDB900490D07 /* PokemonCardDetailViewController.swift in Sources */,
+				83FD89622895687900385256 /* PokemonEmptyCell.swift in Sources */,
 				83FD89542894FD0A00385256 /* PokemonCardDetailCell.swift in Sources */,
 				83BF5060289231E400140A89 /* AppDelegate.swift in Sources */,
 			);
