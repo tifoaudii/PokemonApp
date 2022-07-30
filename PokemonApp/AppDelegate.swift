@@ -14,12 +14,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow()
-        
-        let service = URLSessionNetworkService()
-        let interactor = PokemonCardListInteractorAdapter(service: service)
-        let viewController = PokemonCardListViewController(interactor: interactor)
-        window?.rootViewController = UINavigationController(rootViewController: viewController)
+        let navigationController: UINavigationController = UINavigationController()
+        let viewControllerFactory = PokemonViewControllerFactory()
+        let router = PokemonRouter(navigationController: navigationController, factory: viewControllerFactory)
+        let appFlow = PokemonFlow(router: router)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        appFlow.start()
         return true
     }
 }

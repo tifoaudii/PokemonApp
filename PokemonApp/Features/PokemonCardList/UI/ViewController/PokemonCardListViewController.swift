@@ -208,10 +208,7 @@ extension PokemonCardListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let service = URLSessionNetworkService()
-        let interactor = PokemonCardDetailInteractorAdapter(service: service, pokemonData: data[indexPath.item].data)
-        let detailVC = PokemonCardDetailViewController(interactor: interactor)
-        navigationController?.pushViewController(detailVC, animated: true)
+        data[indexPath.item].selection()
     }
 }
 

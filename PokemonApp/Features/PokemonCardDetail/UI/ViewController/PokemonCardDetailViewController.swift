@@ -190,6 +190,10 @@ extension PokemonCardDetailViewController: UICollectionViewDelegateFlowLayout {
         return interactor.state == .error ? .init(width: view.frame.width, height: view.frame.height) : .init(width: view.frame.width / 2, height: view.frame.height / 2.3)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        data[indexPath.item].selection()
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         10
     }

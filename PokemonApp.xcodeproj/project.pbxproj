@@ -32,6 +32,9 @@
 		83FD895E28950F5F00385256 /* PokemonCardDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD895D28950F5F00385256 /* PokemonCardDetailViewModel.swift */; };
 		83FD89602895161900385256 /* PokemonImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD895F2895161900385256 /* PokemonImageViewController.swift */; };
 		83FD89622895687900385256 /* PokemonEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD89612895687900385256 /* PokemonEmptyCell.swift */; };
+		83FD896528956C1D00385256 /* PokemonFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD896428956C1D00385256 /* PokemonFlow.swift */; };
+		83FD896728956C3700385256 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD896628956C3600385256 /* Router.swift */; };
+		83FD896928956CBE00385256 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FD896828956CBE00385256 /* ViewControllerFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +83,9 @@
 		83FD895D28950F5F00385256 /* PokemonCardDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonCardDetailViewModel.swift; sourceTree = "<group>"; };
 		83FD895F2895161900385256 /* PokemonImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonImageViewController.swift; sourceTree = "<group>"; };
 		83FD89612895687900385256 /* PokemonEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonEmptyCell.swift; sourceTree = "<group>"; };
+		83FD896428956C1D00385256 /* PokemonFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonFlow.swift; sourceTree = "<group>"; };
+		83FD896628956C3600385256 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		83FD896828956CBE00385256 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +245,7 @@
 		83BF505E289231E400140A89 /* PokemonApp */ = {
 			isa = PBXGroup;
 			children = (
+				83FD896328956C0A00385256 /* Navigation */,
 				83AD2F292892E7020026240A /* Helper */,
 				83AD2F152892DBE70026240A /* Features */,
 				83AD2F122892DBC20026240A /* Domain */,
@@ -332,6 +339,16 @@
 				83FD895D28950F5F00385256 /* PokemonCardDetailViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		83FD896328956C0A00385256 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				83FD896428956C1D00385256 /* PokemonFlow.swift */,
+				83FD896628956C3600385256 /* Router.swift */,
+				83FD896828956CBE00385256 /* ViewControllerFactory.swift */,
+			);
+			path = Navigation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -475,10 +492,12 @@
 				83AD2F272892E1A10026240A /* PokemonSkeletonCell.swift in Sources */,
 				8363C4C52893C6E70034951A /* FooterLoadingView.swift in Sources */,
 				83FD89572895021900385256 /* PokemonCardDetailInteractor.swift in Sources */,
+				83FD896528956C1D00385256 /* PokemonFlow.swift in Sources */,
 				83FD895B2895060400385256 /* PokemonCardViewModel.swift in Sources */,
 				83BF5092289244F400140A89 /* UseCase.swift in Sources */,
 				83FD895E28950F5F00385256 /* PokemonCardDetailViewModel.swift in Sources */,
 				83BF5064289231E400140A89 /* PokemonCardListViewController.swift in Sources */,
+				83FD896728956C3700385256 /* Router.swift in Sources */,
 				83AD2F1B2892DC400026240A /* GetPokemonUseCase.swift in Sources */,
 				833C438B28937DCE00E9ABC4 /* PokemonCardErrorCell.swift in Sources */,
 				83BF50942892459300140A89 /* NetworkService.swift in Sources */,
@@ -489,6 +508,7 @@
 				83FD89622895687900385256 /* PokemonEmptyCell.swift in Sources */,
 				83FD89542894FD0A00385256 /* PokemonCardDetailCell.swift in Sources */,
 				83BF5060289231E400140A89 /* AppDelegate.swift in Sources */,
+				83FD896928956CBE00385256 /* ViewControllerFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

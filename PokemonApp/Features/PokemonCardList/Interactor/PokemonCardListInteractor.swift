@@ -27,9 +27,11 @@ protocol PokemonCardListInteractor {
 final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
     
     private let service: NetworkService
+    private let selection: (PokemonData) -> Void
     
-    init(service: NetworkService) {
+    init(service: NetworkService, selection: @escaping (PokemonData) -> Void) {
         self.service = service
+        self.selection = selection
     }
     
     private var didChangeState: ((PokemonCardListState) -> Void)?
@@ -119,6 +121,10 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
     }
     
     private func makePokemonCardViewModels(_ pokemon: [PokemonData]) -> [PokemonCardViewModel] {
-        pokemon.map { PokemonCardViewModel(imageUrlString: $0.images.small, data: $0) }
+        pokemon.map { data in
+            PokemonCardViewModel(imageUrlString: data.images.small) { [weak self] in
+                self?.selection(data)
+            }
+        }
     }
 }

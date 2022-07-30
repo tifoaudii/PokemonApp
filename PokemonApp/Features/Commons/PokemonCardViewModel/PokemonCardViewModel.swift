@@ -10,11 +10,12 @@ import Foundation
 struct PokemonCardViewModel {
     
     private let imageUrlString: String
-    let data: PokemonData
     
-    init(imageUrlString: String, data: PokemonData) {
+    let selection: () -> Void
+    
+    init(imageUrlString: String, selection: @escaping () -> Void) {
         self.imageUrlString = imageUrlString
-        self.data = data
+        self.selection = selection
     }
     
     var imageUrl: URL? {

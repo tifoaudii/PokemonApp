@@ -20,14 +20,16 @@ final class PokemonCardDetailInteractorAdapter: PokemonCardDetailInteractor {
     
     private let service: NetworkService
     private let pokemonData: PokemonData
+    private let selection: (PokemonData) -> Void
     
     private var didChangeState: ((PokemonCardListState) -> Void)?
     private var page: Int = 1
     private var isLoadMorePokemons = false
     
-    init(service: NetworkService, pokemonData: PokemonData) {
+    init(service: NetworkService, pokemonData: PokemonData, selection: @escaping (PokemonData) -> Void) {
         self.service = service
         self.pokemonData = pokemonData
+        self.selection = selection
     }
     
     var pokemonDetailViewModel: PokemonCardDetailViewModel {
@@ -106,8 +108,10 @@ final class PokemonCardDetailInteractorAdapter: PokemonCardDetailInteractor {
     private func makePokemonCardViewModels(_ pokemon: [PokemonData]) -> [PokemonCardViewModel] {
         pokemon.filter {
             $0.id != pokemonData.id
-        } .map {
-            PokemonCardViewModel(imageUrlString: $0.images.small, data: $0)
+        } .map { pokemon in
+            PokemonCardViewModel(imageUrlString: pokemon.images.small) { [weak self] in
+                self?.selection(pokemon)
+            }
         }
     }
 }
