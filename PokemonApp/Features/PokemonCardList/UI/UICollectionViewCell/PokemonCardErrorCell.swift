@@ -63,7 +63,6 @@ final class PokemonCardErrorCell: UICollectionViewCell {
         stackView.axis = .vertical
         stackView.distribution = .fillProportionally
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.backgroundColor = .red
         stackView.spacing = 8
         
         contentView.addSubview(stackView)

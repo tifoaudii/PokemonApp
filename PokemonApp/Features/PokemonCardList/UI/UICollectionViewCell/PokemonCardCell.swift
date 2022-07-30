@@ -36,7 +36,7 @@ final class PokemonCardCell: UICollectionViewCell {
         ])
     }
     
-    func bindView(with data: PokemonData) {
-        pokemonImageView.kf.setImage(with: URL(string: data.images.small))
+    func bindView(with data: PokemonCardViewModel) {
+        pokemonImageView.kf.setImage(with: data.imageUrl)
     }
 }

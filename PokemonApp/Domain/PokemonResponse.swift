@@ -14,6 +14,11 @@ struct PokemonResponse: Codable {
 struct PokemonData: Codable {
     let id: String
     let name: String
+    let supertype: String
+    let hp: String
+    let flavorText: String?
+    let types: [String]
+    let subtypes: [String]
     let images: PokemonImages
 }
 

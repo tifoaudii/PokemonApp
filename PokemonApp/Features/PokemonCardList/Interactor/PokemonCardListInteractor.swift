@@ -18,8 +18,8 @@ protocol PokemonCardListInteractor {
     var state: PokemonCardListState { get }
     
     func registerStateObserver(_ action: @escaping (PokemonCardListState) -> Void)
-    func fetchPokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void)
-    func loadMorePokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void)
+    func fetchPokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void)
+    func loadMorePokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void)
 }
 
 final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
@@ -44,27 +44,29 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
         didChangeState = action
     }
     
-    func fetchPokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void) {
+    func fetchPokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void) {
         state = .loading
         
         let usecase = GetPokemonUseCase(page: 1, pageSize: 20)
         service.request(usecase) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
-                    self?.state = .populated
-                    completion(.success(response.data))
+                    self.state = .populated
+                    completion(.success(self.makePokemonCardViewModels(response.data)))
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.state = .error
+                    self.state = .error
                     completion(.failure(error))
                 }
             }
         }
     }
     
-    func loadMorePokemons(completion: @escaping (Result<[PokemonData], Error>) -> Void) {
+    func loadMorePokemons(completion: @escaping (Result<[PokemonCardViewModel], Error>) -> Void) {
         guard !isLoadMorePokemons else { return }
         
         isLoadMorePokemons = true
@@ -72,10 +74,12 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
         
         let usecase = GetPokemonUseCase(page: page, pageSize: 20)
         service.request(usecase) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
-                    completion(.success(response.data))
+                    completion(.success(self.makePokemonCardViewModels(response.data)))
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -83,7 +87,11 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
                 }
             }
             
-            self?.isLoadMorePokemons = false
+            self.isLoadMorePokemons = false
         }
+    }
+    
+    private func makePokemonCardViewModels(_ pokemon: [PokemonData]) -> [PokemonCardViewModel] {
+        pokemon.map { PokemonCardViewModel(imageUrlString: $0.images.large, data: $0) }
     }
 }
