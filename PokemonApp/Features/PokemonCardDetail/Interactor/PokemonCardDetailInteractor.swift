@@ -32,7 +32,7 @@ final class PokemonCardDetailInteractorAdapter: PokemonCardDetailInteractor {
     
     var pokemonDetailViewModel: PokemonCardDetailViewModel {
         PokemonCardDetailViewModel(
-            imageUrlString: pokemonData.images.small,
+            imageUrlString: pokemonData.images.large,
             hp: pokemonData.hp,
             name: pokemonData.name,
             supertype: pokemonData.supertype,
@@ -107,7 +107,7 @@ final class PokemonCardDetailInteractorAdapter: PokemonCardDetailInteractor {
         pokemon.filter {
             $0.id != pokemonData.id
         } .map {
-            PokemonCardViewModel(imageUrlString: $0.images.large, data: $0)
+            PokemonCardViewModel(imageUrlString: $0.images.small, data: $0)
         }
     }
 }

@@ -9,6 +9,15 @@ import UIKit
 
 final class PokemonImageViewController: UIViewController {
     
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .clear
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 8.0
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -21,23 +30,31 @@ final class PokemonImageViewController: UIViewController {
         super.viewDidLoad()
         configureView()
         configureDismissHandler()
-        enableZoom()
-    }
-    
-    private func enableZoom() {
-        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(startZooming(_:)))
-        imageView.addGestureRecognizer(pinchGesture)
     }
     
     private func configureView() {
+        view.addSubview(scrollView)
         view.backgroundColor = .black.withAlphaComponent(0.3)
-        view.addSubview(imageView)
+        
+        let frameLayoutGuide = scrollView.frameLayoutGuide
+        NSLayoutConstraint.activate([
+            frameLayoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            frameLayoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            frameLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            frameLayoutGuide.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        scrollView.delegate = self
+        scrollView.addSubview(imageView)
+        let contentLayoutGuide = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22),
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 22),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -22),
-            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -22)
+            imageView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            imageView.heightAnchor.constraint(equalTo: view.heightAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentLayoutGuide.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentLayoutGuide.trailingAnchor),
+            imageView.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: contentLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -49,11 +66,10 @@ final class PokemonImageViewController: UIViewController {
     @objc private func didTapView() {
         dismiss(animated: true)
     }
-    
-    @objc private func startZooming(_ sender: UIPinchGestureRecognizer) {
-        let scaleResult = sender.view?.transform.scaledBy(x: sender.scale, y: sender.scale)
-        guard let scale = scaleResult, scale.a > 1, scale.d > 1 else { return }
-        sender.view?.transform = scale
-        sender.scale = 1
+}
+
+extension PokemonImageViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
     }
 }

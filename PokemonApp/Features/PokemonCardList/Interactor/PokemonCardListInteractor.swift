@@ -92,6 +92,6 @@ final class PokemonCardListInteractorAdapter: PokemonCardListInteractor {
     }
     
     private func makePokemonCardViewModels(_ pokemon: [PokemonData]) -> [PokemonCardViewModel] {
-        pokemon.map { PokemonCardViewModel(imageUrlString: $0.images.large, data: $0) }
+        pokemon.map { PokemonCardViewModel(imageUrlString: $0.images.small, data: $0) }
     }
 }
