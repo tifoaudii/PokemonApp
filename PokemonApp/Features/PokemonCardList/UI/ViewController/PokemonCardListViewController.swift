@@ -103,6 +103,7 @@ final class PokemonCardListViewController: UIViewController {
     
     private func configureRootView() {
         navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = .black
         navigationItem.titleView = searchBar
         
         let searchTextField = searchBar.value(forKey: "searchField") as? UITextField

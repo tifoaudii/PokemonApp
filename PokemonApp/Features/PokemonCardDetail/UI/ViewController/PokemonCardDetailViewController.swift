@@ -80,7 +80,7 @@ final class PokemonCardDetailViewController: UIViewController {
     
     private func configureRootView() {
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.barTintColor = .black
         
         view.backgroundColor = .black
         view.addSubview(collectionView)
