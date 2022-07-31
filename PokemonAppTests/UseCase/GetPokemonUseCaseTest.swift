@@ -30,7 +30,7 @@ class GetPokemonUseCaseTest: XCTestCase {
     func testGetPokemonUseCase_mapToPokemonResponse() {
         let sut = GetPokemonUseCase(page: 1, pageSize: 20)
 
-        let data = Data(PokemonResponse.fakeJSON().utf8)
+        let data = Data(PokemonResponse.mockJSON().utf8)
         let response = try? sut.map(data)
         XCTAssertNotNil(response)
     }

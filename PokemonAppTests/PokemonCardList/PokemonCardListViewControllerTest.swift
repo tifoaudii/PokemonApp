@@ -77,7 +77,7 @@ class PokemonCardListViewControllerTest: XCTestCase {
         XCTAssertNotNil(cell)
     }
     
-    func testViewController_whenLoadMorePokemons_shouldAppendNewData() {
+    func testViewController_whenSucceedLoadMorePokemons_shouldAppendNewData() {
         let interactor = PokemonCardListInteractorSpy()
         let sut = PokemonCardListViewController(interactor: interactor)
         
@@ -93,7 +93,7 @@ class PokemonCardListViewControllerTest: XCTestCase {
         XCTAssertEqual(sut.collectionView.numberOfItems(inSection: 0), 4)
     }
     
-    func testViewController_whenLoadMorePokemons_shouldNotAppendNewData() {
+    func testViewController_whenFailedLoadMorePokemons_shouldNotAppendNewData() {
         let interactor = PokemonCardListInteractorSpy()
         let sut = PokemonCardListViewController(interactor: interactor)
         

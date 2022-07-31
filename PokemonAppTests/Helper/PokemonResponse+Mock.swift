@@ -10,7 +10,7 @@ import Foundation
 
 extension PokemonResponse {
     
-    static func fakeJSON() -> String {
+    static func mockJSON() -> String {
                  """
                      {
                          "data": [
@@ -33,7 +33,11 @@ extension PokemonResponse {
     }
     
     static func makeMock() -> PokemonResponse {
-        let data = Data(PokemonResponse.fakeJSON().utf8)
+        let data = Data(PokemonResponse.mockJSON().utf8)
         return try! JSONDecoder().decode(PokemonResponse.self, from: data)
+    }
+    
+    static func mockData() -> PokemonData {
+        return makeMock().data.first!
     }
 }
