@@ -14,13 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow()
-        let navigationController: UINavigationController = UINavigationController()
-        let viewControllerFactory = PokemonViewControllerFactory()
-        let router = PokemonRouter(navigationController: navigationController, factory: viewControllerFactory)
-        let appFlow = PokemonFlow(router: router)
-        window?.rootViewController = navigationController
+        window?.rootViewController = PokemonLegacyViewController()
         window?.makeKeyAndVisible()
-        appFlow.start()
         return true
     }
 }
