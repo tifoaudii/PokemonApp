@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokemonLegacyViewController: UIViewController {
+class PokemonLegacyListViewController: UIViewController {
     
     enum State {
         case initial
@@ -74,7 +74,7 @@ class PokemonLegacyViewController: UIViewController {
     }
 }
 
-extension PokemonLegacyViewController: UICollectionViewDataSource {
+extension PokemonLegacyListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if state == .success {
@@ -110,7 +110,7 @@ extension PokemonLegacyViewController: UICollectionViewDataSource {
     }
 }
 
-extension PokemonLegacyViewController: UICollectionViewDelegateFlowLayout {
+extension PokemonLegacyListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if state == .success || state == .initial {
             return .init(width: view.frame.width / 2, height: view.frame.height / 2.3)
