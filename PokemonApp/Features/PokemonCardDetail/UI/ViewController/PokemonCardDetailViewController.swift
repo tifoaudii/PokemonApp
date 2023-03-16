@@ -23,11 +23,12 @@ final class PokemonCardDetailViewController: UIViewController {
     private var data: [PokemonCardViewModel] = []
     private var footerHeightConstraint: NSLayoutConstraint?
     private var collectionViewBottomConstraint: NSLayoutConstraint?
-    
+    private let didSelectPokemonImage: (UIImage, UIViewController) -> Void
     private let interactor: PokemonCardDetailInteractor
     
-    init(interactor: PokemonCardDetailInteractor) {
+    init(interactor: PokemonCardDetailInteractor, didSelectPokemonImage: @escaping (UIImage, UIViewController) -> Void) {
         self.interactor = interactor
+        self.didSelectPokemonImage = didSelectPokemonImage
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -142,10 +143,8 @@ extension PokemonCardDetailViewController: UICollectionViewDataSource {
             
             cell.bindView(data: interactor.pokemonDetailViewModel)
             cell.didTapImage = { [weak self] image in
-                let imageViewController: PokemonImageViewController = PokemonImageViewController()
-                imageViewController.imageView.image = image
-                imageViewController.modalPresentationStyle = .overFullScreen
-                self?.present(imageViewController, animated: true)
+                guard let self else { return }
+                self.didSelectPokemonImage(image, self)
             }
             return cell
         }

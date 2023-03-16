@@ -12,7 +12,7 @@ class PokemonCardDetailInteractorTest: XCTestCase {
     
     func testInteractor_shouldInitializeStateObserver() {
         let service = NetworkServiceSpy()
-        let sut = PokemonCardDetailInteractorAdapter(service: service, pokemonData: PokemonResponse.mockData(), selection: { _ in })
+        let sut = PokemonCardDetailInteractorAdapter(service: service, pokemonData: PokemonResponse.mockData(), didSelectPokemonCard: { _ in })
         var stateObserverFired = false
         
         let stateObserver: ((PokemonCardListState) -> Void) = { state in
@@ -27,7 +27,7 @@ class PokemonCardDetailInteractorTest: XCTestCase {
     
     func testInteractor_whenSuccessFetchPokemons() {
         let service = NetworkServiceSpy()
-        let sut = PokemonCardDetailInteractorAdapter(service: service, pokemonData: PokemonResponse.mockData(), selection: { _ in })
+        let sut = PokemonCardDetailInteractorAdapter(service: service, pokemonData: PokemonResponse.mockData(), didSelectPokemonCard: { _ in })
         
         XCTAssertEqual(sut.state, .initial)
         sut.fetchPokemons { result in
@@ -47,7 +47,7 @@ class PokemonCardDetailInteractorTest: XCTestCase {
     
     func testInteractor_whenFailedFetchPokemons() {
         let service = NetworkServiceSpy()
-        let sut = PokemonCardDetailInteractorAdapter(service: service, pokemonData: PokemonResponse.mockData(), selection: { _ in })
+        let sut = PokemonCardDetailInteractorAdapter(service: service, pokemonData: PokemonResponse.mockData(), didSelectPokemonCard: { _ in })
         
         XCTAssertEqual(sut.state, .initial)
         sut.fetchPokemons { result in

@@ -9,7 +9,7 @@ import UIKit
 
 protocol ViewControllerFactory {
     func createPokemonCardListViewController(selection: @escaping (PokemonData) -> Void) -> UIViewController
-    func createPokemonCardDetailViewController(pokemonData: PokemonData, selection: @escaping (PokemonData) -> Void) -> UIViewController
+    func createPokemonCardDetailViewController(pokemonData: PokemonData, didSelectPokemonCard: @escaping (PokemonData) -> Void, didSelectPokemonImage: @escaping (UIImage, UIViewController) -> Void) -> UIViewController
 }
 
 final class PokemonViewControllerFactory: ViewControllerFactory {
@@ -21,9 +21,9 @@ final class PokemonViewControllerFactory: ViewControllerFactory {
         return PokemonCardListViewController(interactor: interactor)
     }
     
-    func createPokemonCardDetailViewController(pokemonData: PokemonData, selection: @escaping (PokemonData) -> Void) -> UIViewController {
+    func createPokemonCardDetailViewController(pokemonData: PokemonData, didSelectPokemonCard: @escaping (PokemonData) -> Void, didSelectPokemonImage: @escaping (UIImage, UIViewController) -> Void) -> UIViewController {
         let service = URLSessionNetworkService()
-        let interactor = PokemonCardDetailInteractorAdapter(service: service, pokemonData: pokemonData, selection: selection)
-        return PokemonCardDetailViewController(interactor: interactor)
+        let interactor = PokemonCardDetailInteractorAdapter(service: service, pokemonData: pokemonData, didSelectPokemonCard: didSelectPokemonCard)
+        return PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: didSelectPokemonImage)
     }
 }

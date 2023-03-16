@@ -8,8 +8,9 @@
 import UIKit
 
 protocol Router {
-    func navigateToPokemonCardList(_ didSelectPokemon: @escaping (PokemonData) -> Void)
-    func navigateToPokemonDetail(pokemonData: PokemonData, _ didSelectPokemon: @escaping (PokemonData) -> Void)
+    func navigateToPokemonCardList(_ didSelectPokemonCard: @escaping (PokemonData) -> Void)
+    func navigateToPokemonDetail(pokemonData: PokemonData, didSelectPokemonCard: @escaping (PokemonData) -> Void, didSelectPokemonImage: @escaping (UIImage, UIViewController) -> Void)
+    func presentPokemonImage(with image: UIImage, from viewController: UIViewController)
 }
 
 struct PokemonRouter: Router {
@@ -22,13 +23,20 @@ struct PokemonRouter: Router {
         self.factory = factory
     }
     
-    func navigateToPokemonCardList(_ didSelectPokemon: @escaping (PokemonData) -> Void) {
-        let cardListViewController = factory.createPokemonCardListViewController(selection: didSelectPokemon)
+    func navigateToPokemonCardList(_ didSelectPokemonCard: @escaping (PokemonData) -> Void) {
+        let cardListViewController = factory.createPokemonCardListViewController(selection: didSelectPokemonCard)
         navigationController.pushViewController(cardListViewController, animated: true)
     }
     
-    func navigateToPokemonDetail(pokemonData: PokemonData, _ didSelectPokemon: @escaping (PokemonData) -> Void) {
-        let cardDetailViewController = factory.createPokemonCardDetailViewController(pokemonData: pokemonData, selection: didSelectPokemon)
+    func navigateToPokemonDetail(pokemonData: PokemonData, didSelectPokemonCard: @escaping (PokemonData) -> Void, didSelectPokemonImage: @escaping (UIImage, UIViewController) -> Void) {
+        let cardDetailViewController = factory.createPokemonCardDetailViewController(pokemonData: pokemonData, didSelectPokemonCard: didSelectPokemonCard, didSelectPokemonImage: didSelectPokemonImage)
         navigationController.pushViewController(cardDetailViewController, animated: true)
+    }
+    
+    func presentPokemonImage(with image: UIImage, from viewController: UIViewController) {
+        let imageViewController: PokemonImageViewController = PokemonImageViewController()
+        imageViewController.imageView.image = image
+        imageViewController.modalPresentationStyle = .overFullScreen
+        viewController.present(imageViewController, animated: true)
     }
 }

@@ -12,7 +12,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenViewDidLoad_shouldLoadUI() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         XCTAssertNotNil(sut.collectionView)
@@ -21,7 +21,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenViewDidLoad_shouldRenderCardDetailCell() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         XCTAssertEqual(sut.collectionView.numberOfItems(inSection: 0), 1)
@@ -44,7 +44,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenViewDidLoad_shouldRegisterStateObserver() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         XCTAssertTrue(interactor.registerStateObserverCalled)
@@ -53,7 +53,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenViewDidLoad_shouldFetchPokemons() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         XCTAssertTrue(interactor.fetchPokemonsCalled)
@@ -62,7 +62,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenSucceedFetchPokemons_shouldDisplayToCollectionView() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         interactor.fetchPokemonsCompletion?(.success(PokemonCardViewModel.makeMock()))
@@ -73,7 +73,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenFailedFetchPokemons_shouldDisplayToCollectionView() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         interactor.fetchPokemonsCompletion?(.failure(ErrorResponse.invalidResponse))
@@ -85,7 +85,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenFetchingPokemons_shouldDisplaySkeletonView() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         
@@ -96,7 +96,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenSucceedLoadMorePokemons_shouldAppendNewData() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         interactor.fetchPokemonsCompletion?(.success(PokemonCardViewModel.makeMock()))
@@ -112,7 +112,7 @@ class PokemonCardDetailViewControllerTest: XCTestCase {
     
     func testViewController_whenFailedLoadMorePokemons_shouldAppendNewData() {
         let interactor = PokemonCardDetailInteractorSpy(pokemonData: PokemonResponse.mockData())
-        let sut = PokemonCardDetailViewController(interactor: interactor)
+        let sut = PokemonCardDetailViewController(interactor: interactor, didSelectPokemonImage: {_,_ in })
         
         sut.loadViewIfNeeded()
         interactor.fetchPokemonsCompletion?(.success(PokemonCardViewModel.makeMock()))
